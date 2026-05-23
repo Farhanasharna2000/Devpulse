@@ -134,8 +134,39 @@ const getSingleIssue = async (id: number) => {
 
   return formattedIssue;
 };
+
+const updateIssue = async (
+  id: number,
+  payload: Partial<TIssue>
+) => {
+  const { title, description, type } =
+    payload;
+
+  const result = await pool.query(
+    `
+    UPDATE issues
+    SET
+      title = COALESCE($1, title),
+      description = COALESCE($2, description),
+      type = COALESCE($3, type),
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = $4
+    RETURNING *
+    `,
+    [
+      title,
+      description,
+      type,
+      id,
+    ]
+  );
+
+  return result.rows[0];
+};
+
 export const IssueService = {
   createIssue,
   getAllIssues,
   getSingleIssue,
+  updateIssue
 };
