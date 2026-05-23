@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service";
-import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+import { StatusCodes } from "http-status-codes";
 
 //Controller for sighnup
 
