@@ -11,10 +11,9 @@ const signupUser = async (payload: TUser) => {
   const { name, email, password, role } = payload;
 
   // check existing user
-  const existingUser = await pool.query(
-    `SELECT * FROM users WHERE email=$1`,
-    [email]
-  );
+  const existingUser = await pool.query(`SELECT * FROM users WHERE email=$1`, [
+    email,
+  ]);
 
   if (existingUser.rows.length > 0) {
     throw new Error("User already exists");
@@ -23,7 +22,7 @@ const signupUser = async (payload: TUser) => {
   // hash password
   const hashedPassword = await bcrypt.hash(
     password,
-    Number(config.bcrypt_salt_rounds )
+    Number(config.bcrypt_salt_rounds),
   );
 
   // insert user
@@ -45,7 +44,7 @@ const signupUser = async (payload: TUser) => {
       created_at,
       updated_at
     `,
-    [name, email, hashedPassword, role]
+    [name, email, hashedPassword, role],
   );
 
   return result.rows[0];
@@ -53,14 +52,10 @@ const signupUser = async (payload: TUser) => {
 
 //Login user
 
-const loginUser = async (
-  email: string,
-  password: string
-) => {
-  const result = await pool.query(
-    `SELECT * FROM users WHERE email=$1`,
-    [email]
-  );
+const loginUser = async (email: string, password: string) => {
+  const result = await pool.query(`SELECT * FROM users WHERE email=$1`, [
+    email,
+  ]);
 
   const user = result.rows[0];
 
@@ -68,26 +63,23 @@ const loginUser = async (
     throw new Error("User not found");
   }
 
-  const passwordMatched = await bcrypt.compare(
-    password,
-    user.password
-  );
+  const passwordMatched = await bcrypt.compare(password, user.password);
 
   if (!passwordMatched) {
     throw new Error("Incorrect password");
   }
 
-const token = jwt.sign(
-  {
-    id: user.id,
-    name: user.name,
-    role: user.role,
-  },
-  config.jwt_secret,
-  {
-    expiresIn: config.jwt_expires_in,
-  }
-);
+  const token = jwt.sign(
+    {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+    },
+    config.jwt_secret,
+    {
+      expiresIn: config.jwt_expires_in,
+    },
+  );
 
   return {
     token,
@@ -101,7 +93,6 @@ const token = jwt.sign(
     },
   };
 };
-
 
 export const AuthService = {
   signupUser,

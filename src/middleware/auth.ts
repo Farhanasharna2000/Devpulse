@@ -1,18 +1,9 @@
 import jwt from "jsonwebtoken";
 import config from "../config/index.js";
-import type {
-  NextFunction,
-  Request,
-  Response,
-} from "express";
+import type { NextFunction, Request, Response } from "express";
 
-const auth = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const token =
-    req.headers.authorization?.split(" ")[1];
+const auth = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({
@@ -22,10 +13,7 @@ const auth = (
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      config.jwt_secret as string
-    );
+    const decoded = jwt.verify(token, config.jwt_secret as string);
 
     req.user = decoded as jwt.JwtPayload;
 

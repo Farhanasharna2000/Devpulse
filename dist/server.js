@@ -67,10 +67,9 @@ var initDB = async () => {
 // src/modules/auth/auth.service.ts
 var signupUser = async (payload) => {
   const { name, email, password, role } = payload;
-  const existingUser = await pool.query(
-    `SELECT * FROM users WHERE email=$1`,
-    [email]
-  );
+  const existingUser = await pool.query(`SELECT * FROM users WHERE email=$1`, [
+    email
+  ]);
   if (existingUser.rows.length > 0) {
     throw new Error("User already exists");
   }
@@ -101,18 +100,14 @@ var signupUser = async (payload) => {
   return result.rows[0];
 };
 var loginUser = async (email, password) => {
-  const result = await pool.query(
-    `SELECT * FROM users WHERE email=$1`,
-    [email]
-  );
+  const result = await pool.query(`SELECT * FROM users WHERE email=$1`, [
+    email
+  ]);
   const user = result.rows[0];
   if (!user) {
     throw new Error("User not found");
   }
-  const passwordMatched = await bcrypt.compare(
-    password,
-    user.password
-  );
+  const passwordMatched = await bcrypt.compare(password, user.password);
   if (!passwordMatched) {
     throw new Error("Incorrect password");
   }
@@ -306,12 +301,7 @@ var updateIssue = async (id, payload) => {
     WHERE id = $4
     RETURNING *
     `,
-    [
-      title,
-      description,
-      type,
-      id
-    ]
+    [title, description, type, id]
   );
   return result.rows[0];
 };
@@ -338,9 +328,7 @@ var IssueService = {
 import { StatusCodes as StatusCodes2 } from "http-status-codes";
 var handleError = (error, res) => {
   const errorMessage = error instanceof Error ? error.message : "Unknown error";
-  return res.status(
-    StatusCodes2.INTERNAL_SERVER_ERROR
-  ).json({
+  return res.status(StatusCodes2.INTERNAL_SERVER_ERROR).json({
     success: false,
     message: "Something went wrong",
     errors: errorMessage
@@ -418,12 +406,25 @@ var updateIssue2 = async (req, res) => {
         message: "Invalid issue id"
       });
     }
+    const { title, description, type } = req.body;
+    if (!title && !description && !type) {
+      return res.status(StatusCodes3.BAD_REQUEST).json({
+        success: false,
+        message: "At least one field is required"
+      });
+    }
+    if (type && !["bug", "feature_request"].includes(type)) {
+      return res.status(StatusCodes3.BAD_REQUEST).json({
+        success: false,
+        message: "Invalid issue type"
+      });
+    }
     const issueResult = await pool.query(
       `
-        SELECT *
-        FROM issues
-        WHERE id = $1
-        `,
+      SELECT *
+      FROM issues
+      WHERE id = $1
+      `,
       [issueId]
     );
     const issue = issueResult.rows[0];
@@ -435,7 +436,11 @@ var updateIssue2 = async (req, res) => {
     }
     const user = req.user;
     if (user.role === "maintainer") {
-      const result = await IssueService.updateIssue(issueId, req.body);
+      const result = await IssueService.updateIssue(issueId, {
+        title,
+        description,
+        type
+      });
       return res.status(StatusCodes3.OK).json({
         success: true,
         message: "Issue updated successfully",
@@ -455,7 +460,11 @@ var updateIssue2 = async (req, res) => {
           message: "You can update only open issues"
         });
       }
-      const result = await IssueService.updateIssue(issueId, req.body);
+      const result = await IssueService.updateIssue(issueId, {
+        title,
+        description,
+        type
+      });
       return res.status(StatusCodes3.OK).json({
         success: true,
         message: "Issue updated successfully",
@@ -527,10 +536,7 @@ var auth = (req, res, next) => {
     });
   }
   try {
-    const decoded = jwt2.verify(
-      token,
-      config_default.jwt_secret
-    );
+    const decoded = jwt2.verify(token, config_default.jwt_secret);
     req.user = decoded;
     next();
   } catch (error) {

@@ -4,7 +4,7 @@ import express, {
   type Response,
 } from "express";
 
-import cors from 'cors'
+import cors from "cors";
 import { AuthRoutes } from "./modules/auth/auth.route";
 import { IssueRoutes } from "./modules/issue/issue.route";
 
@@ -17,7 +17,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Devpulse!");
 });
 
-app.use("/api/auth",AuthRoutes);
+app.use("/api/auth", AuthRoutes);
 app.use("/api/issues", IssueRoutes);
 
 export default app;

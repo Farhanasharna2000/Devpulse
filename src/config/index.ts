@@ -10,9 +10,6 @@ const config = {
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS as string,
   jwt_secret: process.env.JWT_SECRET as string,
   jwt_expires_in: process.env.JWT_EXPIRES_IN as StringValue,
-
 };
 
 export default config;
-
-

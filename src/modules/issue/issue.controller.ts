@@ -96,12 +96,28 @@ const updateIssue = async (req: Request, res: Response) => {
       });
     }
 
+    const { title, description, type } = req.body;
+
+    if (!title && !description && !type) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "At least one field is required",
+      });
+    }
+
+    if (type && !["bug", "feature_request"].includes(type)) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Invalid issue type",
+      });
+    }
+
     const issueResult = await pool.query(
       `
-        SELECT *
-        FROM issues
-        WHERE id = $1
-        `,
+      SELECT *
+      FROM issues
+      WHERE id = $1
+      `,
       [issueId],
     );
 
@@ -116,9 +132,13 @@ const updateIssue = async (req: Request, res: Response) => {
 
     const user = req.user;
 
-    // maintainer can update any issue
+    // maintainer
     if (user.role === "maintainer") {
-      const result = await IssueService.updateIssue(issueId, req.body);
+      const result = await IssueService.updateIssue(issueId, {
+        title,
+        description,
+        type,
+      });
 
       return res.status(StatusCodes.OK).json({
         success: true,
@@ -127,7 +147,7 @@ const updateIssue = async (req: Request, res: Response) => {
       });
     }
 
-    // contributor can update own open issue only
+    // contributor
     if (user.role === "contributor") {
       if (issue.reporter_id !== user.id) {
         return res.status(StatusCodes.FORBIDDEN).json({
@@ -143,7 +163,11 @@ const updateIssue = async (req: Request, res: Response) => {
         });
       }
 
-      const result = await IssueService.updateIssue(issueId, req.body);
+      const result = await IssueService.updateIssue(issueId, {
+        title,
+        description,
+        type,
+      });
 
       return res.status(StatusCodes.OK).json({
         success: true,

@@ -138,12 +138,8 @@ const getSingleIssue = async (id: number) => {
 
 //update issue
 
-const updateIssue = async (
-  id: number,
-  payload: Partial<TIssue>
-) => {
-  const { title, description, type } =
-    payload;
+const updateIssue = async (id: number, payload: Partial<TIssue>) => {
+  const { title, description, type } = payload;
 
   const result = await pool.query(
     `
@@ -156,12 +152,7 @@ const updateIssue = async (
     WHERE id = $4
     RETURNING *
     `,
-    [
-      title,
-      description,
-      type,
-      id,
-    ]
+    [title, description, type, id],
   );
 
   return result.rows[0];
@@ -169,16 +160,14 @@ const updateIssue = async (
 
 //delete issue
 
-const deleteIssue = async (
-  id: number
-) => {
+const deleteIssue = async (id: number) => {
   const result = await pool.query(
     `
     DELETE FROM issues
     WHERE id = $1
     RETURNING *
     `,
-    [id]
+    [id],
   );
 
   return result.rows[0];
@@ -189,5 +178,5 @@ export const IssueService = {
   getAllIssues,
   getSingleIssue,
   updateIssue,
-  deleteIssue
+  deleteIssue,
 };

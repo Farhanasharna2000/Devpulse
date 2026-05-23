@@ -4,7 +4,6 @@ export interface TIssue {
   type: "bug" | "feature_request";
 }
 
-
 export interface TIssueQuery {
   sort?: "newest" | "oldest";
   type?: "bug" | "feature_request";
