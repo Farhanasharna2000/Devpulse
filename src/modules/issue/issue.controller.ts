@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { IssueService } from "./issue.service.js";
 import { pool } from "../../db/index.js";
-import { handleError } from "../../utils/handleError .js";
+import { handleError } from "../../utils/handleError.js";
 
 //Create issue
 
