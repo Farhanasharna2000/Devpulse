@@ -324,7 +324,7 @@ var IssueService = {
   deleteIssue
 };
 
-// src/utils/handleError .ts
+// src/utils/handleError.ts
 import { StatusCodes as StatusCodes2 } from "http-status-codes";
 var handleError = (error, res) => {
   const errorMessage = error instanceof Error ? error.message : "Unknown error";
@@ -367,6 +367,7 @@ var getAllIssues2 = async (req, res) => {
     const result = await IssueService.getAllIssues(req.query);
     res.status(StatusCodes3.OK).json({
       success: true,
+      message: "Issues retrived successfully",
       data: result
     });
   } catch (error) {
@@ -391,6 +392,7 @@ var getSingleIssue2 = async (req, res) => {
     }
     res.status(StatusCodes3.OK).json({
       success: true,
+      message: "Issues retrived successfully",
       data: result
     });
   } catch (error) {
