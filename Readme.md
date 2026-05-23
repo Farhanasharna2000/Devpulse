@@ -2,6 +2,10 @@
 
 Devpulse is a backend API built with Node.js, Express, TypeScript, and PostgreSQL. It provides user authentication and an issue management system.
 
+## Live URL
+
+https://devpulse-black.vercel.app
+
 ## Features
 
 - **User Authentication:** Secure signup and login functionality using JSON Web Tokens (JWT) and `bcrypt` for password hashing.
@@ -28,7 +32,7 @@ Devpulse is a backend API built with Node.js, Express, TypeScript, and PostgreSQ
 
 1. Clone the repository and navigate to the project directory:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Farhanasharna2000/Devpulse.git
    cd Devpulse
    ```
 
@@ -64,12 +68,39 @@ Devpulse is a backend API built with Node.js, Express, TypeScript, and PostgreSQ
 ## API Endpoints
 
 ### Authentication (`/api/auth`)
-- `POST /signup` - Register a new user
-- `POST /login` - Authenticate a user and receive a JWT
+- `POST /api/auth/signup` - Register a new user
+- `POST /api/auth/login` - Authenticate a user and receive a JWT
 
 ### Issues (`/api/issues`)
-- `GET /` - Retrieve all issues
-- `GET /:id` - Retrieve a single issue by its ID
-- `POST /` - Create a new issue (Requires Auth)
-- `PATCH /:id` - Update an existing issue (Requires Auth)
-- `DELETE /:id` - Delete an issue (Requires Auth)
+- `GET /api/issues` - Retrieve all issues
+- `GET /api/issues/:id` - Retrieve a single issue by its ID
+- `POST /api/issues` - Create a new issue (Requires Auth)
+- `PATCH /api/issues/:id` - Update an existing issue (Requires Auth)
+- `DELETE /api/issues/:id` - Delete an issue (Requires Auth)
+
+## Database Schema Summary
+
+### users Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(255) | User full name |
+| email | VARCHAR(255) | Unique user email |
+| password | TEXT | Hashed password |
+| role | VARCHAR(20) | User role (default: contributor) |
+| created_at | TIMESTAMP | Account creation time |
+| updated_at | TIMESTAMP | Last update time |
+
+### issues Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| title | VARCHAR(150) | Issue title |
+| description | TEXT | Issue description |
+| type | VARCHAR(50) | Issue type (bug/feature) |
+| status | VARCHAR(50) | Issue status (default: open) |
+| reporter_id | INTEGER | ID of issue reporter |
+| created_at | TIMESTAMP | Issue creation time |
+| updated_at | TIMESTAMP | Last update time |
