@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { IssueService } from "./issue.service.js";
 import { pool } from "../../db/index.js";
+import { handleError } from "../../utils/handleError .js";
 
 //Create issue
 
@@ -33,10 +34,7 @@ const createIssue = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "Something went wrong",
-    });
+    handleError(error, res);
   }
 };
 
@@ -51,12 +49,12 @@ const getAllIssues = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "Something went wrong",
-    });
+    handleError(error, res);
   }
 };
+
+//get single issue
+
 const getSingleIssue = async (req: Request, res: Response) => {
   try {
     const issueId = Number(req.params.id);
@@ -82,10 +80,7 @@ const getSingleIssue = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "Something went wrong",
-    });
+    handleError(error, res);
   }
 };
 
@@ -162,10 +157,7 @@ const updateIssue = async (req: Request, res: Response) => {
       message: "Forbidden access",
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "Something went wrong",
-    });
+    handleError(error, res);
   }
 };
 
@@ -212,10 +204,7 @@ const deleteIssue = async (req: Request, res: Response) => {
       message: "Issue deleted successfully",
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: "Something went wrong",
-    });
+    handleError(error, res);
   }
 };
 
