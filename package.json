@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "tsx watch ./src/server.ts",
-    "build": "tsup",
+    "start": "node init && node dist/server.js",
+    "dev": "node init && tsx watch ./src/server.ts",
+    "build": "node init && tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
