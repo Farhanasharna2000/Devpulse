@@ -6,7 +6,7 @@ const main = async () => {
   try {
     await initDB();
     app.listen(config.port, () => {
-      console.log(`Devpulse listening on port ${config.port}`);
+      console.log(`Server running on port ${config.port}`);
     });
   } catch (error) {
     console.log("server failed to start", error);
