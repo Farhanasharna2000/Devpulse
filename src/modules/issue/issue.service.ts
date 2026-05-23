@@ -92,6 +92,7 @@ const getAllIssues = async (query: TIssueQuery) => {
 };
 
 //get single issues
+
 const getSingleIssue = async (id: number) => {
   const issueResult = await pool.query(
     `
@@ -135,6 +136,8 @@ const getSingleIssue = async (id: number) => {
   return formattedIssue;
 };
 
+//update issue
+
 const updateIssue = async (
   id: number,
   payload: Partial<TIssue>
@@ -164,9 +167,27 @@ const updateIssue = async (
   return result.rows[0];
 };
 
+//delete issue
+
+const deleteIssue = async (
+  id: number
+) => {
+  const result = await pool.query(
+    `
+    DELETE FROM issues
+    WHERE id = $1
+    RETURNING *
+    `,
+    [id]
+  );
+
+  return result.rows[0];
+};
+
 export const IssueService = {
   createIssue,
   getAllIssues,
   getSingleIssue,
-  updateIssue
+  updateIssue,
+  deleteIssue
 };
