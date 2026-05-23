@@ -39,6 +39,57 @@ const createIssue = async (req: Request, res: Response) => {
   }
 };
 
+//get issues
+
+const getAllIssues = async (req: Request, res: Response) => {
+  try {
+    const result = await IssueService.getAllIssues(req.query);
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+const getSingleIssue = async (req: Request, res: Response) => {
+  try {
+    const issueId = Number(req.params.id);
+
+    if (isNaN(issueId)) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Invalid issue id",
+      });
+    }
+
+    const result = await IssueService.getSingleIssue(issueId);
+
+    if (!result) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Issue not found",
+      });
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 export const IssueController = {
   createIssue,
+  getAllIssues,
+  getSingleIssue,
 };
