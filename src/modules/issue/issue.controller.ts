@@ -46,6 +46,7 @@ const getAllIssues = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({
       success: true,
+       message: "Issues retrived successfully",
       data: result,
     });
   } catch (error) {
@@ -77,6 +78,7 @@ const getSingleIssue = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({
       success: true,
+      message: "Issues retrived successfully",
       data: result,
     });
   } catch (error) {
